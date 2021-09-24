@@ -1,1 +1,1419 @@
-Hello World
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Supplementary Materials</title>
+    <meta name="robots" content="noindex">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script> -->
+</head>
+
+<body>
+    <h1>Contents</h1>
+    <ul>
+        <li><a href="#cases">Identified Cases</a></li>
+        <li><a href="#issues">Identified Correctness Issues</a></li>
+        <li><a href="#perf">Performance Evaluation</a></li>
+    </ul>
+
+    <h1 id="cases">Identified Cases</h1>
+    <!-- <table border="1" style="border-collapse:collapse"> -->
+    <table border="1">
+        <tr>
+            <th>App</th>
+            <th>Id</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>In Core APIs?</th>
+            <th>Buggy?</th>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>21</td>
+            <td>lock-based</td>
+            <td>DiscourseSingleSignOn#match_email_or_create_user</td>
+            <td>Coordinate concurrent SSO login</td>
+            <td>No</td>
+            <td>Yes, see issue 16</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>22</td>
+            <td>lock-based</td>
+            <td>discourse-solved/blob/main/plugin.rb:81</td>
+            <td>Coordinate concurrent post creation</td>
+            <td>Yes</td>
+            <td>Yes, see issue 15</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>23</td>
+            <td>lock-based</td>
+            <td>Invite#redeem_invite_link<br /></td>
+            <td>Coordinate concurrent account creation (by invitation)</td>
+            <td>No</td>
+            <td>Yes, see issue 17</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>24</td>
+            <td>lock-based</td>
+            <td>PostCreator#transaction<br /></td>
+            <td>Coordinate concurrent post creation</td>
+            <td>Yes</td>
+            <td>Yes, see issue 18</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>25</td>
+            <td>lock-based</td>
+            <td>PostAlerter#notify_group_summary<br /></td>
+            <td>Coordinate concurrent notification</td>
+            <td>Yes</td>
+            <td>Yes, see issue 19</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>26</td>
+            <td>lock-based</td>
+            <td>Email::Receiver#process!<br /></td>
+            <td>Coordinate concurrent mail receiving</td>
+            <td>Yes</td>
+            <td>Yes, see issue 20</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>27</td>
+            <td>lock-based</td>
+            <td>Jobs::ProcessPost#execute<br /></td>
+            <td>Coordinate concurrent post processing</td>
+            <td>Yes</td>
+            <td>Yes, see issue 21</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>28</td>
+            <td>lock-based</td>
+            <td>CookedPostProcessor#post_process</td>
+            <td>Coordinate concurrent post processing</td>
+            <td>Yes</td>
+            <td>Yes, see issue 22,95</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>29</td>
+            <td>lock-based</td>
+            <td>UserAvatar#update_gravatar!<br /></td>
+            <td>Coordinate concurrent gravatar updating</td>
+            <td>No</td>
+            <td>Yes, see issue 23</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>30</td>
+            <td>lock-based</td>
+            <td>UploadCreator#create_for</td>
+            <td>Coordinate concurrent file uploading</td>
+            <td>Yes</td>
+            <td>Yes, see issue 24,182</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>45</td>
+            <td>validation-based</td>
+            <td>app/models/reviewable.rb:620<br /></td>
+            <td>Coordinate concurrent reviewing</td>
+            <td>No</td>
+            <td>Yes, see issue 33</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>54</td>
+            <td>validation-based</td>
+            <td>lib/shrink_uploaded_image.rb:183<br /></td>
+            <td>Coordinate concurrent image processing</td>
+            <td>No</td>
+            <td>Yes, see issue 40</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>67</td>
+            <td>validation-based</td>
+            <td>app/controllers/posts_controller.rb:213</td>
+            <td>Coordinate concurrent post updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 50</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>9</td>
+            <td>lock-based</td>
+            <td>app/services/activitypub/process_account_service.rb:19<br /></td>
+            <td>Coordinate concurrent account creation and updating</td>
+            <td>No</td>
+            <td>Yes, see issue 3</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>10</td>
+            <td>lock-based</td>
+            <td>app/services/vote_service.rb:17<br /></td>
+            <td>Coordinate concurrent voting</td>
+            <td>Yes</td>
+            <td>Yes, see issue 4</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>11</td>
+            <td>lock-based</td>
+            <td>app/lib/activitypub/activity/create.rb:313<br /></td>
+            <td>Coordinate concurrent voting</td>
+            <td>Yes</td>
+            <td>Yes, see issue 5</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>12</td>
+            <td>lock-based</td>
+            <td>app/lib/activitypub/activity/create.rb:48<br /></td>
+            <td>Coordinate concurrent status pull</td>
+            <td>Yes</td>
+            <td>Yes, see issue 6</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>14</td>
+            <td>lock-based</td>
+            <td>app/lib/activitypub/activity/announce.rb:7<br /></td>
+            <td>Coordinate concurrent announcement creation</td>
+            <td>Yes</td>
+            <td>Yes, see issue 8</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>15</td>
+            <td>lock-based</td>
+            <td>app/controllers/settings/exports_controller.rb:16<br /></td>
+            <td>Coordinate concurrent user information export</td>
+            <td>No</td>
+            <td>Yes, see issue 9</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>16</td>
+            <td>lock-based</td>
+            <td>app/controllers/media_proxy_controller.rb:18<br /></td>
+            <td>Coordinate concurrent media file downloading</td>
+            <td>Yes</td>
+            <td>Yes, see issue 10</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>17</td>
+            <td>lock-based</td>
+            <td>app/services/fetch_link_card_service.rb:22<br /></td>
+            <td>Coordinate concurrent preview card fetching</td>
+            <td>Yes</td>
+            <td>Yes, see issue 11</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>18</td>
+            <td>lock-based</td>
+            <td>app/workers/distribution_worker.rb:7&quot;<br /></td>
+            <td>Coordinate concurrent status deletion and creation</td>
+            <td>Yes</td>
+            <td>Yes, see issue 12</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>19</td>
+            <td>lock-based</td>
+            <td>app/services/resolve_account_service.rb:95<br /></td>
+            <td>Coordinate concurrent account creation and updating</td>
+            <td>No</td>
+            <td>Yes, see issue 13</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>20</td>
+            <td>lock-based</td>
+            <td>app/lib/activitypub/activity.rb:213<br /></td>
+            <td>Coordinate concurrent account deletion and updating</td>
+            <td>No</td>
+            <td>Yes, see issue 69,14</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>50</td>
+            <td>validation-based</td>
+            <td>db/schema.rb:33<br /></td>
+            <td>Coordinate concurrent conversation updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>51</td>
+            <td>validation-based</td>
+            <td>app/models/account_stat.rb:24</td>
+            <td>Coordinate concurrent account status updating</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>52</td>
+            <td>validation-based</td>
+            <td>db/schema.rb:497<br />app/controllers/api/v1/markers_controller.rb:15</td>
+            <td>Coordinate concurrent marker updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>53</td>
+            <td>validation-based</td>
+            <td>db/schema.rb:653<br />app/services/activitypub/process_poll_service.rb:47</td>
+            <td>Coordinate concurrent voting</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>127</td>
+            <td>validation-based</td>
+            <td>app/models/account_stat.rb:36</td>
+            <td>Coordinate concurrent account status updating</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>1</td>
+            <td>lock-based</td>
+            <td>Spree::Core::ControllerHelpers::Order#find_order_by_token_or_user<br /></td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 131,1,178</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>2</td>
+            <td>lock-based</td>
+            <td>Spree::PaymentMethod::StoreCredit#handle_action_call<br /></td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 53,179</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>3</td>
+            <td>lock-based</td>
+            <td>Spree::Api::V1::OrdersController#find_order<br /></td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 132,2</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>46</td>
+            <td>validation-based</td>
+            <td>app/controllers/spree/checkout_controller.rb:101<br /></td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 164,158,38</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>61</td>
+            <td>validation-based</td>
+            <td>app/models/spree/adjustment.rb:104</td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 45</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>62</td>
+            <td>validation-based</td>
+            <td>app/models/spree/stock_item.rb:14</td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 46</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>78</td>
+            <td>validation-based</td>
+            <td>app/controllers/spree/checkout_controller.rb:18#ensure_sufficient_stock_lines</td>
+            <td>Coordinate concurrent stock updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 159</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>79</td>
+            <td>validation-based</td>
+            <td>app/models/spree/order.rb:400#ensure_line_item_variants_are_not_discontinued<br /></td>
+            <td>Coordinate concurrent goods status accessing </td>
+            <td>Yes</td>
+            <td>Yes, see issue 160</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>80</td>
+            <td>validation-based</td>
+            <td>app/models/spree/order.rb:413#ensure_line_items_are_in_stock</td>
+            <td>Coordinate concurrent stock updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 161</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>124</td>
+            <td>lock-based</td>
+            <td>app/models/spree/stock_item.rb:37</td>
+            <td>Coordinate concurrent stock updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 177</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>71</td>
+            <td>lock-based</td>
+            <td>app/models/attachment.rb:498</td>
+            <td>Coordinate concurrent attachment changes</td>
+            <td>Yes</td>
+            <td>Yes, see issue 128</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>72</td>
+            <td>validation-based</td>
+            <td>app/controllers/wiki_controller.rb:206</td>
+            <td>Coordinate concurrent issue changes</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>73</td>
+            <td>lock-based</td>
+            <td>lib/redmine/nested_set/issue_nested_set.rb:161</td>
+            <td>Coordinate concurrent changes to issue nested set</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>74</td>
+            <td>lock-based</td>
+            <td>lib/redmine/nested_set/issue_nested_set.rb:184</td>
+            <td>Coordinate concurrent changes to issue nested set</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>75</td>
+            <td>lock-based</td>
+            <td>lib/redmine/nested_set/issue_nested_set.rb:196</td>
+            <td>Coordinate concurrent changes to issue nested set</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>76</td>
+            <td>lock-based</td>
+            <td>lib/redmine/nested_set/project_nested_set.rb:150</td>
+            <td>Coordinate concurrent changes to project nested set</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>77</td>
+            <td>lock-based</td>
+            <td>lib/redmine/nested_set/project_nested_set.rb:167</td>
+            <td>Coordinate concurrent changes to project nested set</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>128</td>
+            <td>validation-based</td>
+            <td>app/controllers/issues_controller.rb:198</td>
+            <td>Coordinate concurrent issue changes</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>129</td>
+            <td>validation-based</td>
+            <td>app/models/issue.rb:1391</td>
+            <td>Coordinate concurrent issue changes</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>5</td>
+            <td>lock-based</td>
+            <td>
+                core/broadleaf-framework-web/src/main/java/org/broadleafcommerce/core/web/order/security/CartStateFilter.java:<br />
+            </td>
+            <td>Coordinate concurrent order updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 56,162,87</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>6</td>
+            <td>lock-based</td>
+            <td>
+                core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/CheckoutServiceImpl.java:<br />
+            </td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 36,88</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>7</td>
+            <td>lock-based</td>
+            <td>
+                core/broadleaf-framework-web/src/main/java/org/broadleafcommerce/core/web/order/security/CartStateFilter.java:<br />
+            </td>
+            <td>Coordinate concurrent order updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 59,163,94,89</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>8</td>
+            <td>lock-based</td>
+            <td>org.broadleafcommerce.common.id.service.IdGenerationServiceImpl#findNextId(java.lang.String,
+                java.lang.Long)<br /></td>
+            <td>Coordinate concurrent account creation</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>47</td>
+            <td>validation-based</td>
+            <td>common/src/main/java/org/broadleafcommerce/common/util/OptimisticLockUtils.java:<br /></td>
+            <td>Coordinate concurrent data updating</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>48</td>
+            <td>validation-based</td>
+            <td>org/broadleafcommerce/common/id/domain/IdGenerationImpl.java:52<br /></td>
+            <td>Coordinate concurrent account creation</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>49</td>
+            <td>validation-based</td>
+            <td>
+                org.broadleafcommerce.common.security.handler.SecurityFilter<br />org/broadleafcommerce/common/security/service/StaleStateProtectionServiceImpl.java:58<br />org/broadleafcommerce/openadmin/web/filter/BroadleafAdminRequestProcessor.java:174<br />org/broadleafcommerce/common/web/processor/FormProcessor.java:106
+            </td>
+            <td>Coordinate concurrent data updating</td>
+            <td>No</td>
+            <td>Yes, see issue 39</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>63</td>
+            <td>validation-based</td>
+            <td>
+                core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/service/OfferServiceImpl.java#removeOutOfDataOfferCode
+            </td>
+            <td>Coordinate concurrent offer code updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 47</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>65</td>
+            <td>validation-based</td>
+            <td>org/broadleafcommerce/core/offer/service/workflow/VerifyCustomerMaxOfferUsesActivity.java<br /></td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 175,48</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>66</td>
+            <td>validation-based</td>
+            <td>org/broadleafcommerce/core/inventory/service/InventoryServiceImpl.java:203<br /></td>
+            <td>Coordinate concurrent stock updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 49</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>120</td>
+            <td>lock-based</td>
+            <td>org.broadleafcommerce.common.id.service.IdGenerationServiceImpl#findNextId(java.lang.String,
+                java.lang.Long)<br /></td>
+            <td>Coordinate concurrent account creation</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>40</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#internalSaveRetailStoreCountryCenter</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 81</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>55</td>
+            <td>validation-based</td>
+            <td>com/doublechaintech/retailscm/CommonJDBCTemplateDAO.java#getUpdateSQL</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>104</td>
+            <td>validation-based</td>
+            <td>com/doublechaintech/retailscm/CommonJDBCTemplateDAO.java#getDeleteSQL</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>105</td>
+            <td>validation-based</td>
+            <td>com/doublechaintech/retailscm/CommonJDBCTemplateDAO.java#getDeleteWithVersionSQL</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>108</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#breakWithRetailStoreByXXX</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 167</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>109</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#addXXX</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 168</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>110</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#updateXXX</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 169</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>111</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#updateXXXProperty</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 170</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>112</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#removeXXX</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 171</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>113</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#removeXXXList</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 172</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>114</td>
+            <td>lock-based</td>
+            <td>RetailStoreCountryCenterManagerImpl.java#copyXXXForm</td>
+            <td>Coordinate concurrent data updating</td>
+            <td>Yes</td>
+            <td>Yes, see issue 173</td>
+        </tr>
+        <tr>
+            <td>JumpServer</td>
+            <td>115</td>
+            <td>lock-based</td>
+            <td>apps/assets/api/node.py#perform_create</td>
+            <td>Coordinate concurrent asset node creation</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>JumpServer</td>
+            <td>116</td>
+            <td>lock-based</td>
+            <td>apps/assets/signals_handler/node_assets_amount.py#update_nodes_asset_amount</td>
+            <td>Coordinate concurrent updating for the number assets </td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>JumpServer</td>
+            <td>117</td>
+            <td>lock-based</td>
+            <td>apps/assets/signals_handler/node_assets_amount.py#update_node_assets_amount</td>
+            <td>Coordinate concurrent updating for the number assets </td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>JumpServer</td>
+            <td>118</td>
+            <td>lock-based</td>
+            <td>apps/assets/utils.py#check_node_assets_amount</td>
+            <td>Coordinate concurrent checking for the number of assets</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>JumpServer</td>
+            <td>119</td>
+            <td>lock-based</td>
+            <td>apps/perms/utils/asset/user_permission.py#refresh_if_need</td>
+            <td>Coordinate concurrent rebuild process of user grant tree</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>83</td>
+            <td>lock-based</td>
+            <td>saleor/checkout/complete_checkout.py#complete_checkout(with voucher code usage)</td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 176</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>84</td>
+            <td>lock-based</td>
+            <td>saleor/payment/gateway.py#authorize</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>85</td>
+            <td>lock-based</td>
+            <td>saleor/graphql/order/mutations/orders.py#OrderCapture</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>86</td>
+            <td>lock-based</td>
+            <td>saleor/order/actions.py#create_refund_fulfillment</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>87</td>
+            <td>lock-based</td>
+            <td>saleor/checkout/complete_checkout.py#complete_checkout(with payment to void)</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>88</td>
+            <td>lock-based</td>
+            <td>saleor/checkout/complete_checkout.py#complete_checkout(with payment to confirm)</td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 180</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>92</td>
+            <td>lock-based</td>
+            <td>saleor/graphql/order/mutations/fulfillments.py#FulfillmentCancel</td>
+            <td>Coordinate concurrent fulfillment cancel</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>93</td>
+            <td>lock-based</td>
+            <td>saleor/graphql/order/mutations/fulfillments.py#OrderFulfill</td>
+            <td>Coordinate concurrent fulfillment</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>99</td>
+            <td>lock-based</td>
+            <td>saleor/payment/gateways/adyen/webhooks.py#get_payment</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>100</td>
+            <td>lock-based</td>
+            <td>saleor/payment/gateways/adyen/webhooks.py#get_checkout</td>
+            <td>Coordinate concurrent order processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>101</td>
+            <td>lock-based</td>
+            <td>saleor/payment/gateways/stripe/webhooks.py#_get_payment</td>
+            <td>Coordinate concurrent payment processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>102</td>
+            <td>lock-based</td>
+            <td>saleor/payment/gateways/stripe/webhooks.py#_get_checkout</td>
+            <td>Coordinate concurrent order processing</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>103</td>
+            <td>lock-based</td>
+            <td>saleor/product/utils/__init__.py#delete_categories</td>
+            <td>Coordinate concurrent categories updating</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>122</td>
+            <td>lock-based</td>
+            <td>saleor/warehouse/management.py#OrderLineUpdate</td>
+            <td>Coordinate concurrent order updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>123</td>
+            <td>lock-based</td>
+            <td>saleor/graphql/order/mutations/orders.py#OrderLineCreate</td>
+            <td>Coordinate concurrent order updating</td>
+            <td>Yes</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>125</td>
+            <td>lock-based</td>
+            <td>saleor/checkout/complete_checkout.py#complete_checkout(with payment to process)</td>
+            <td>Coordinate concurrent checkout</td>
+            <td>Yes</td>
+            <td>Yes, see issue 181</td>
+        </tr>
+    </table>
+
+
+    <h1 id="issues">Identified Correctness Issues</h1>
+    <table border="1" style="border-collapse:collapse">
+        <tr>
+            <th>App</th>
+            <th>Id</th>
+            <th>Type</th>
+            <th>Have severe consequence?</th>
+            <th>Link to corresponding issue report</th>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>16</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>15</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, the answer accepted by topic is not the actual one </td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>17</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>18</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>19</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, duplicate notification </td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>20</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>21</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, the data of post is overwritten</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>22</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, the data of post is overwritten</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>95</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, the data of post is overwritten</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>23</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>24</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/timeouts-of-redis-lock/201520</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>182</td>
+            <td>Omitting critical operations</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>33</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>No</td>
+            <td>https://meta.discourse.org/t/mixing-active-record-mini-sql-leads-to-unexpected-behavior/176504<br />
+            </td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>40</td>
+            <td>Incomplete transaction repair</td>
+            <td>Yes, post can not display properly</td>
+            <td>https://meta.discourse.org/t/race-condition-in-downsize-upload-script/177152<br /></td>
+        </tr>
+        <tr>
+            <td>Discourse</td>
+            <td>50</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, post data become inconsistent</td>
+            <td>https://meta.discourse.org/t/possible-race-condition-when-editing-a-post/177514<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>3</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>4</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, incorrect vote counting</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>5</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, incorrect vote counting</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>6</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>8</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>9</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>10</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>11</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>12</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, status is still visible after deletion</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>13</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>14</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/tootsuite/mastodon/issues/15645<br /></td>
+        </tr>
+        <tr>
+            <td>Mastodon</td>
+            <td>69</td>
+            <td>Forgetting ad hoc transactions</td>
+            <td>Yes, after account deletion, some related information still exists</td>
+            <td>https://github.com/mastodon/mastodon/issues/16645</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>1</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, order total exceeds actual amount</td>
+            <td>https://github.com/spree/spree/issues/10697<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>131</td>
+            <td>Not rolling back after crashes</td>
+            <td>Yes, payment is lost and no credit is deduced</td>
+            <td>https://github.com/spree/spree/issues/10744<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>178</td>
+            <td>Omitting critical operations</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>53</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, the usage of store credit exceeds limitation </td>
+            <td>https://github.com/spree/spree/issues/11284</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>179</td>
+            <td>Omitting critical operations</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>2</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, order total exceeds actual amount</td>
+            <td>https://github.com/spree/spree/issues/10697<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>132</td>
+            <td>Not rolling back after crashes</td>
+            <td>Yes, payment is lost and no credit is deduced</td>
+            <td>https://github.com/spree/spree/issues/10744<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>38</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, order total exceeds actual amount</td>
+            <td>https://github.com/spree/spree/issues/11275</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>158</td>
+            <td>Not rolling back after crashes</td>
+            <td>Yes, payment is lost and no credit is deduced</td>
+            <td>https://github.com/spree/spree/issues/10744<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>164</td>
+            <td>Forgetting ad hoc transactions</td>
+            <td>No</td>
+            <td>https://github.com/spree/spree/issues/10733<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>45</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>46</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, stock is incorrectly modified</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>159</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, discontinue goods is sold</td>
+            <td>https://github.com/spree/spree/issues/10697<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>160</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, discontinue goods is sold</td>
+            <td>https://github.com/spree/spree/issues/10697<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>161</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, discontinue goods is sold</td>
+            <td>https://github.com/spree/spree/issues/10697<br /></td>
+        </tr>
+        <tr>
+            <td>Spree</td>
+            <td>177</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, stock is incorrectly modified</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Redmine</td>
+            <td>128</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>56</td>
+            <td>Forgetting ad hoc transactions</td>
+            <td>Yes, the finished order is not visible </td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2481<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>87</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, oversell or offer code overuse</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2474<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>162</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, multiple order exists but only one is visible</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2478<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>36</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2554</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>88</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, oversell or offer code overuse</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2474<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>59</td>
+            <td>Forgetting ad hoc transactions</td>
+            <td>Yes, the finished order is not visible </td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2481<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>89</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, order status is inconsistent</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2474<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>94</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, order status is inconsistent</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2555</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>163</td>
+            <td>Incorrect lock primitives</td>
+            <td>Yes, order status is inconsistent</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2483<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>39</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>No</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2564</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>47</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, expired offer code was used</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2474<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>48</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, the usage of offer code exceeds limitation</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2474<br /></td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>175</td>
+            <td>Forgetting ad hoc transactions</td>
+            <td>No</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Broadleaf</td>
+            <td>49</td>
+            <td>Non-atomic validate-and-commit</td>
+            <td>Yes, stock is incorrectly modified</td>
+            <td>https://github.com/BroadleafCommerce/BroadleafCommerce/issues/2472<br /></td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>81</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>167</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>168</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>169</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>170</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>171</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>172</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>SCM Suite</td>
+            <td>173</td>
+            <td>Incorrect lock primitives</td>
+            <td>No</td>
+            <td>https://github.com/doublechaintech/scm-biz-suite/issues/17</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>176</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, payment exceeds the order total</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>180</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, payment exceeds the order total</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+        <tr>
+            <td>Saleor</td>
+            <td>181</td>
+            <td>Omitting critical operations</td>
+            <td>Yes, payment exceeds the order total</td>
+            <td>haven&#39;t report yet</td>
+        </tr>
+    </table>
+
+
+    <h1 id="perf">Performance Evaluation</h1>
+
+    <h2>Workload RMW</h2>
+    <h3>Schema</h3>
+    <p>A table T, except primary key row ID, only has a val column.</p>
+    <h3>Data Population</h3>
+    <p>Initial table T with 100, 000 rows, and row id is from 1 to 100, 000.</p>
+    <h3>Procedure</h3>
+    <p>1.row_id := zipfian(lo:1, hi:100000, exp:1)</p>
+    <p>2.Select * From T Where id=row_id</p>
+    <p>3.Execute conflict free queries for random(lo:250, hi:750) ms</p>
+    <p>4.Update T Set val=random() Where id=row_id</p>
+
+    <h2>Workload AA</h2>
+    <h3>Schema</h3>
+    <p>Two tables T1 and T2. T1 has two columns, row id (primary key) and val. T2 has three columns, row id (primary
+        key),
+        t1_id (foreign key reference to T1's primary key) and val. T1 has one-to-many relationship with T2.</p>
+    <h3>Data Population</h3>
+    <p>Initial table T1 with 100, 000 rows, and row id is from 1 to 100, 000. For each row in T1, initial table T2 with
+        4
+        corresponding rows (400, 000 total).</p>
+    <h3>Procedure</h3>
+    <p>1.t1_id := zipfian(lo:1, hi:100000, exp:1)</p>
+    <p>2.t1 := Select * From T1 Where id=t1_id</p>
+    <p>3.t2s := Select * From T2 Where t1_id=t1.id</p>
+    <p>4.for t2 in randomize(t2s):</p>
+    <p>5.&emsp;Execute conflict free queries for random(lo:50, hi:150) ms</p>
+    <p>6.&emsp;Update T2 Set val=random() Where id=t2.id</p>
+    <p>7.Execute conflict free queries for random(lo:50, hi:150) ms</p>
+    <p>8.Update T1 Set val=random() Where id=t1.id</p>
+
+    <h2>Workload CBP</h2>
+    <h3>Schema</h3>
+    <p>A table T, except primary key row ID, has 8 additional columns, from col0 to col7.</p>
+    <h3>Data Population</h3>
+    <p>Initial table T with 100, 000 rows, and row id is from 1 to 100, 000.</p>
+    <h3>Procedure</h3>
+    <p>1.row_id := zipfian(lo:1, hi:100000, exp:1)</p>
+    <p>2.column := "col" + (thread_id mod 8)</p>
+    <p>3.Update T Set column=random() Where id=row_id</p>
+    <p>4.Execute conflict free queries for random(lo:250, hi:750) ms</p>
+
+    <h2>Workload PBP</h2>
+    <h3>Schema</h3>
+    <p>A table T, except primary key row ID, only has a val column.</p>
+    <h3>Data Population</h3>
+    <p>Table T is empty initially.</p>
+    <h3>Procedure</h3>
+    <p>1.val := atomic_fetch_and_increment(global_counter)</p>
+    <p>2.Select * From T Where val=val</p>
+    <p>3.Execute conflict free queries for random(lo:250, hi:750) ms</p>
+    <p>4.Insert Into T (val) Value (val)</p>
+</body>
+
+</html>
